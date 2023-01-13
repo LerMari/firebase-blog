@@ -62,7 +62,8 @@ React.useEffect(
         <div className="other-articles-container">
             {
                 otherArticles.map(item => (
-                    <div className="other-article-item"
+                    <div key={item.id} 
+                    className="other-article-item"
                     style={{backgroundImage: `url(${item?.imageUrl})`}}>
                             <div className="banner-info">
                             <h3>{item?.title}</h3>
