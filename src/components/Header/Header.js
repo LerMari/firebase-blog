@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom'
 import { FaHome } from "react-icons/fa"
 import {auth} from '../../config/firebaseConfig'
 import {useAuthState} from 'react-firebase-hooks/auth'
+import {signOut} from 'firebase/auth'
 
 function Header() {
 
@@ -30,9 +31,11 @@ function Header() {
             <span className="username">
               Hello, {user.displayName? user.displayName: user.email}!
             </span>
+            <button className="auth-link"
+                    onClick={()=>signOut(auth)}>Logout</button>
           </div>
           :
-          <button className="auth-link">SignUp</button>
+          <Link to='/auth' className="auth-link">SignUp</Link>
 
         }
         

@@ -37,6 +37,16 @@ const handleSignup = (e) => {
 const handleLogin = (e) => {
     e.preventDefault();
     console.log("login")
+    //login
+    signInWithEmailAndPassword(auth, email, password)
+    .then (res => {
+        console.log(res)
+        //navigate to homepage
+        navigate('/')
+    })
+    .catch(err =>{
+        alert(err.com)
+    })
 }
 
   return (
@@ -56,7 +66,9 @@ const handleLogin = (e) => {
                             onChange={(e)=>{setPassword(e.target.value)}}/>        
                 </div>
                 <button type="submit">Login</button>
-                <p>Don't have an account?<span>Signup</span></p>
+                <p>Don't have an account?
+                    <span className="form-link"
+                          onClick={()=>setExistingUser(false)}>Signup</span></p>
             </form>
             :
             <form className="auth-form" onSubmit={handleSignup}>
@@ -76,7 +88,9 @@ const handleLogin = (e) => {
                             onChange={(e)=>{setPassword(e.target.value)}}/>        
                 </div>
                 <button type="submit">Register</button>
-                <p>Already have an account?<span>Login</span></p>
+                <p>Already have an account?
+                    <span className="form-link"
+                          onClick={()=>setExistingUser(true)}>Login</span></p>
             </form>
             
         }
