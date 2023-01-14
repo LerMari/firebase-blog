@@ -1,12 +1,13 @@
 import React, { useTransition } from 'react'
 import './Header.css'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import { FaHome } from "react-icons/fa"
 import {auth} from '../../config/firebaseConfig'
 import {useAuthState} from 'react-firebase-hooks/auth'
 import {signOut} from 'firebase/auth'
 
 function Header() {
+  let navigate = useNavigate();
 
   //get user date
   const [user] = useAuthState(auth);
@@ -18,7 +19,7 @@ function Header() {
 
   return (
     <div className="header-container">
-            <FaHome />
+            <FaHome onClick={()=>navigate('/')}/>
         <div className="categories-container">
             {
                 categories.map((item, index) => <Link to={`/category/${item}
