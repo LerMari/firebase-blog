@@ -1,7 +1,20 @@
 import React from 'react'
 import './AddArticle.css'
+import {storage, db, auth} from '../../config/firebaseConfig'
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage'
+import {collection, addDoc, Timestamp} from 'firebase/firestore'
+import {v4} from 'uuid'
+import {useAuthState} from 'react-firebase-hooks/auth'
+import {toast} from 'react-toastify'
+import {useNavigate} from 'react-router-dom'
 
 function AddArticle() {
+
+//activate navigate
+let navigate = useNavigate();    
+
+//get user date
+  const [user] = useAuthState(auth);
 
   //array for topics
   const categories = ["Health", "Food", "Travel", "Tech"]
@@ -21,6 +34,49 @@ function AddArticle() {
  const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    //create a reference for the image
+    const imageRef= ref(storage, `images/${formData.image.name+v4()}`)
+    //upload image to bucket
+    uploadBytes(imageRef, formData.image)
+    .then(res =>{
+        //console.log(res.ref)
+        //now get urm from this ref in bucket
+        getDownloadURL(res.ref)
+        .then(url=>{
+            //now we have all data and img url - save to collection
+            //create reference to articles collection
+            const articleRef = collection(db, 'articles')
+            //use addDoc to add a document to the collection
+            addDoc(articleRef, {
+                title: formData.title,
+                summary: formData.summary,
+                paragraphOne: formData.paragraphOne,
+                paragraphTwo: formData.paragraphTwo,
+                paragraphThree: formData.paragraphThree,
+                category: formData.category,
+                imageUrl: url,
+                createdAt: Timestamp.now().toDate(),
+                createdBy: user.displayName,
+                userId: user.uid
+            })
+        }
+        )
+        .then(res =>{
+            // alert('article saved!')
+            toast('Article saved!', {
+                type:"success",
+                autoClose: 1500
+            })
+            //pause before nav to home
+            setTimeout(()=>{
+                navigate('/')
+            }, 2000)
+        })
+    })
+    .catch(err=>{
+        console.log(err)
+        toast('could not save :(', {type:"error"})
+    })
  }
  
   return (

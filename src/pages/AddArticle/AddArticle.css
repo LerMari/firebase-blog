@@ -46,7 +46,7 @@
 .add-article-form button{
     background-color: var(--button-bg);
     border:none;
-    color:white;
+    color:black;
     padding:8px 16px;
     border-radius:8px;
     margin-top:20px;
