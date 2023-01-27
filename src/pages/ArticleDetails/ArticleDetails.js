@@ -3,6 +3,7 @@ import './ArticleDetails.css'
 import {useParams} from 'react-router-dom'
 import {db} from '../../config/firebaseConfig'
 import {getDoc, doc} from 'firebase/firestore'
+import Likes from '../../components/Likes/Likes'
 
 function ArticleDetails() {
     //get article id from url
@@ -37,6 +38,7 @@ function ArticleDetails() {
         <p>Category: {article?.category}</p>
         <p><span className="article-span">Author:</span>{article?.createdBy?.toUpperCase()}</p>
         <p><span className="article-span published">Published:</span> {article?.createdAt?.toDate().toDateString()}</p>
+        <Likes articleId={articleId} />
       </div>
       <div className="details-content">
          <img className="details-img" src={article?.imageUrl} />

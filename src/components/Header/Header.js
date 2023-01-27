@@ -9,7 +9,7 @@ import {signOut} from 'firebase/auth'
 function Header() {
   let navigate = useNavigate();
 
-  //get user date
+  //get user data
   const [user] = useAuthState(auth);
   console.log("user data", user)
 
