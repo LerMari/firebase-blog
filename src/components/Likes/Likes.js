@@ -14,6 +14,39 @@ function Likes({articleId}) {
 
     //need state to know if liked
     const [isLiked, setIsLiked] = React.useState(false)
+    const [likeCount, setLikeCount] = React.useState(0)
+
+    React.useEffect(
+        ()=>{
+            //when page loads, find out did user like this article
+            //to initialize isLiked properly
+            //need refernce to likes
+            const likesRef = collection(db, 'likes')
+            //make a query to see if record with this userid and articleid
+            const q = query(likesRef, where("articleId", "==", articleId),
+                                  where('userId', '==', user && user?.uid))
+                //look for documents with this query
+                getDocs(q, likesRef)
+                .then(res=>{
+                    //is there a match?
+                    console.log(res.size)
+                    //gives you number of matches
+                    if (res.size > 0) {
+                        setIsLiked(true)
+                    }
+                })
+                .catch(err=>console.log(err))
+
+                //find out number of likes
+                //make a query to count records with this articleid
+                const q2 = query(likesRef, where("articleId", "==", articleId))
+                getDocs(q2, likesRef)
+                .then (res =>{
+                    setLikeCount(res.size)
+                })
+                .catch(err => console.log(err))
+        }, [user, isLiked]
+    )
 
  const handleLike = () => {
     console.log('like');
@@ -42,7 +75,7 @@ function Likes({articleId}) {
         const likesRef = collection(db, 'likes')
         //set up query to find this one
         const q = query(likesRef, where("articleId", "==", articleId),
-                                  where('userId', '==', user?.uid))
+                                  where('userId', '==', user && user?.uid))
         //look for documents with this query
         getDocs(q, likesRef)
         .then(res=>{
@@ -66,10 +99,16 @@ function Likes({articleId}) {
     <div>
         {
             isLiked?
-            <FaHeart onClick={handleUnlike} />
+            <div className="like-icon">
+                <FaHeart onClick={handleUnlike} />
+                <span>{likeCount}</span>
+            </div>
             :
+            <div className="like-icon">
             <FaRegHeart 
             onClick={handleLike}/>
+            <span>{likeCount}</span>
+            </div>
         }
     </div>
   )

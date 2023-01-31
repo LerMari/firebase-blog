@@ -31,7 +31,7 @@ function ArticleDetails() {
 
 
   return (
-    <div clasName="details-container">
+    <div className="details-container">
       <h1>{article?.title}</h1>
       <h2>{article?.summary}</h2>
       <div className="details-info-container">
