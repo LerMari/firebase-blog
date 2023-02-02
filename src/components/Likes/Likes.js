@@ -22,9 +22,10 @@ function Likes({articleId}) {
             //to initialize isLiked properly
             //need refernce to likes
             const likesRef = collection(db, 'likes')
+            if (user){
             //make a query to see if record with this userid and articleid
             const q = query(likesRef, where("articleId", "==", articleId),
-                                  where('userId', '==', user && user?.uid))
+                                  where('userId', '==', user?.uid))
                 //look for documents with this query
                 getDocs(q, likesRef)
                 .then(res=>{
@@ -36,6 +37,7 @@ function Likes({articleId}) {
                     }
                 })
                 .catch(err=>console.log(err))
+            }
 
                 //find out number of likes
                 //make a query to count records with this articleid
